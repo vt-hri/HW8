@@ -39,7 +39,7 @@ panda = Panda(basePosition=[0, 0, 0],
 # these demonstrations move from the robot's home position to the cube position
 n_demos = 50
 dataset = []
-action_magnitude = 1
+action_magnitude = 0.1
 for demo_idx in range(n_demos):
 
     # reset the robot
