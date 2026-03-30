@@ -37,7 +37,7 @@ panda = Panda(basePosition=[0, 0, 0],
 
 # collect the demonstrations
 # these demonstrations move from the robot's home position to the cube position
-n_demos = 10
+n_demos = 50
 dataset = []
 action_magnitude = 1
 for demo_idx in range(n_demos):
