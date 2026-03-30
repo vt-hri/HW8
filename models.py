@@ -77,4 +77,4 @@ class MLPPolicy(nn.Module):
         x = torch.cat((z_static, z_ee, state), dim=-1)
         x = self.relu(self.pi_1(x))
         x = self.relu(self.pi_2(x))
-        return 0.1 * torch.tanh(self.pi_3(x))
+        return 1.0 * torch.tanh(self.pi_3(x))
