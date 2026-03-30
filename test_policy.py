@@ -51,7 +51,7 @@ model.eval()
 
 # test and see how your learned policy does!
 n_tests = 10
-action_magnitude = 0.1
+action_magnitude = 1.0
 for test_idx in tqdm(range(n_tests)):
 
     # reset the robot
