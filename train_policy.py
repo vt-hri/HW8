@@ -3,12 +3,6 @@ import pickle
 import numpy as np
 from models import MLPPolicy
 from torch.utils.data import Dataset, DataLoader
-from tqdm import tqdm
-
-
-
-
-import matplotlib.pyplot as plt
 
 
 # import dataset for training
@@ -53,7 +47,6 @@ def train_model(loadname):
     train_set = DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
 
     # main training loop
-    LOSS = []
     for epoch in tqdm(range(EPOCH)):
         for batch_id, batch in enumerate(train_set):
             batch = [k.to(DEVICE) for k in batch]
@@ -66,7 +59,6 @@ def train_model(loadname):
 
             # compute the loss between actual and predicted
             loss = model.mse_loss(actions, actions_hat)
-            LOSS.append(loss.item())
                  
             # update model parameters
             optimizer.zero_grad()
@@ -77,9 +69,6 @@ def train_model(loadname):
             print(epoch, loss.item())
             torch.save(model.state_dict(), "model_weights")
     torch.save(model.state_dict(), "model_weights")
-
-    plt.plot(LOSS)
-    plt.show()
 
 # train models
 if __name__ == "__main__":
