@@ -5,7 +5,6 @@ import os
 import time
 import pickle
 from robot import Panda
-from tqdm import tqdm
 
 
 # parameters
