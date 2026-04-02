@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torchvision.models import resnet18, ResNet18_Weights
 
 
 # vision encoder
@@ -67,6 +66,7 @@ class MLPPolicy(nn.Module):
         ## helper functions
         # relu activation function
         self.relu = nn.ReLU()
+        self.mse_loss = nn.MSELoss()
 
     ## execute robot policy
     # input state output action
