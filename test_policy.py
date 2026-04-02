@@ -6,9 +6,6 @@ import time
 import torch
 from models import MLPPolicy
 from robot import Panda
-from tqdm import tqdm
-
-import matplotlib.pyplot as plt
 
 
 # parameters
@@ -28,7 +25,6 @@ urdfRootPath = pybullet_data.getDataPath()
 plane = p.loadURDF(os.path.join(urdfRootPath, "plane.urdf"), basePosition=[0, 0, -0.625])
 table = p.loadURDF(os.path.join(urdfRootPath, "table/table.urdf"), basePosition=[0.5, 0, -0.625])
 cube = p.loadURDF(os.path.join(urdfRootPath, "cube_small.urdf"), basePosition=[0.5, 0, 0.025])
-p.changeVisualShape(cube, -1, rgbaColor=[1, 0, 0, 1])      # change cube color
 
 # load the robot
 jointStartPositions = [0.0, 0.0, 0.0, -2*np.pi/4, 0.0, np.pi/2, np.pi/4, 0.0, 0.0, 0.04, 0.04]
@@ -52,21 +48,20 @@ model.eval()
 # test and see how your learned policy does!
 n_tests = 10
 action_magnitude = 1.0
-for test_idx in tqdm(range(n_tests)):
+for test_idx in range(n_tests):
 
     # reset the robot
     panda.reset(jointStartPositions)
     cube_position = np.random.uniform([0.3, -0.3, 0.025], [0.7, +0.3, 0.025])
     p.resetBasePositionAndOrientation(cube, cube_position, p.getQuaternionFromEuler([0, 0, 0]))
+    p.changeVisualShape(cube, -1, rgbaColor=[1, 0, 0, 1])      # change cube color
 
     # run sequence of position and gripper commands
-    traj = []
     for time_idx in range (1000):
 
         # get the robot's position
         robot_state = panda.get_state()
         robot_pos = np.array(robot_state["ee-position"])
-        traj.append(robot_pos)
 
         # get the state
         state = torch.FloatTensor(robot_pos).to(DEVICE)
@@ -84,15 +79,4 @@ for test_idx in tqdm(range(n_tests)):
         panda.move_to_pose(robot_pos + action, ee_rotz=0, positionGain=0.01)
         p.stepSimulation()
         time.sleep(control_dt)
-
-
-        cube_position = np.random.uniform([0.3, -0.3, 0.025], [0.7, +0.3, 0.025])        
-        if np.linalg.norm(robot_pos - cube_position) < 0.01:
-            print('success')
-            break
     
-    # traj = np.stack(traj)
-    # _, ax = plt.subplots(1, 1, subplot_kw={'projection': '3d'})
-    # ax.plot(traj[:, 0], traj[:, 1], traj[:, 2], 'k-')
-    # ax.scatter(cube_position[0], cube_position[1], cube_position[2], c='b', s=20)
-    # plt.show()
